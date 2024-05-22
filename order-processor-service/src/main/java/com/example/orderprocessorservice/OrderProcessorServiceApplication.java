@@ -1,4 +1,4 @@
-package com.example.ordertakerservice;
+package com.example.orderprocessorservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

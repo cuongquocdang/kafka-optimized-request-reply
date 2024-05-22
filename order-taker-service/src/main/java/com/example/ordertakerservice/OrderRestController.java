@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OrderRestController {
 
-    private final OrderProducer orderProducer;
+    private final OrderTakerProducer orderTakerProducer;
 
     @PostMapping
     public void placeOrder(@RequestBody final OrderTakerRequest request) {
-        orderProducer.send(request);
+        orderTakerProducer.send(request);
     }
 
     public record OrderTakerRequest(String ticketId) {
