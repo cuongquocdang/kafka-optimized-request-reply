@@ -8,6 +8,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -18,8 +21,16 @@ public class OrderProducer {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void submitOrder(final OrderRequest request) {
+    private final ConcurrentHashMap<String, CompletableFuture<OrderResult>> orderFutures = new ConcurrentHashMap<>();
+
+    public CompletableFuture<OrderResult> submitOrder(final OrderRequest request) {
+
+        var future = new CompletableFuture<OrderResult>();
+        orderFutures.put(request.ticketId(), future);
+
         kafkaTemplate.send(orderRequestTopic, request);
+
+        return future;
     }
 
     @KafkaListener(
@@ -29,6 +40,11 @@ public class OrderProducer {
     )
     public void listenOrderResult(@Payload final OrderResult result) {
         log.info("Received a order result: {}", result);
+
+        var future = orderFutures.remove(result.ticketId());
+        if (null != future) {
+            future.complete(result);
+        }
     }
 
     public record OrderRequest(String ticketId) {
