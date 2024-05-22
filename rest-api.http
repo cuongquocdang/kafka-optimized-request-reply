@@ -1,0 +1,7 @@
+### Place Order
+POST http://localhost:8081/v1/orders
+Content-Type: application/json
+
+{
+  "ticketId": "123"
+}
