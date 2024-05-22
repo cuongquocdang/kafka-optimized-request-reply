@@ -30,9 +30,11 @@ spring:
       retries: 30
 
 kafka:
-  order-taker:
-    topic: example-order_taker_service-order_taker-dev
+  order-request:
+    topic: example-order_taker_service-order_request-dev
     concurrency: 3
+  order-result:
+    topic: example-order_processor_service-order_result-dev
 
 logging:
   pattern:

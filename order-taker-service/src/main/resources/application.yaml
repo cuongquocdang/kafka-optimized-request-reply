@@ -23,9 +23,23 @@ spring:
         enable.idempotence: true
         max.in.flight.requests.per.connection: 5
         spring.json.add.type.headers: false
+    consumer:
+      group-id: ${spring.application.name}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: latest
+      enable-auto-commit: true
+      properties:
+        spring.json.trusted.packages: '*'
+        spring.json.use.type.headers: false
+        partition.assignment.strategy: org.apache.kafka.clients.consumer.CooperativeStickyAssignor
 
 kafka:
-  order-taker: example-order_taker_service-order_taker-dev # <tenant_id>-<service_owner>-<topic_name>-<environment>
+  order-request:
+    topic: example-order_taker_service-order_request-dev
+  order-result:
+    topic: example-order_processor_service-order_result-dev
+    concurrency: 3
 
 logging:
   pattern:
