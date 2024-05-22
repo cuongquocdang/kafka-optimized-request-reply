@@ -1,0 +1,15 @@
+server:
+  port: 8081
+  shutdown: graceful
+
+spring:
+  application:
+    name: order-taker-service
+  main:
+    banner-mode: off
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    org.zalando.logbook: trace
